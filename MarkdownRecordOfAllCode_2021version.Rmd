@@ -1,0 +1,1671 @@
+---
+title: "R code working"
+author: "Lachlan Webb and Stacey Llewellyn"
+date: "November 5, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#install.packages(c("stringr","xlsx","readxl","dplyr","magrittr","tidyr","lubridate","survival","survminer",
+#                   "car","ggplot2","gridExtra"))
+
+
+
+library(stringr)
+library(xlsx)
+library(readxl)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(lubridate)
+library(survival)
+library(survminer)
+library(car)
+library(ggplot2)
+library(gridExtra)
+library(RColorBrewer)
+library(cowplot)
+library(ggpubr)
+
+
+```
+
+
+```{r Section 1 - Requirements}
+# packages to install
+#install.packages("stringr")
+#install.packages()
+### ....
+
+# check library path
+.libPaths()
+
+# change library path
+#remove to run# .libPaths("C:/TopDirectory/SubDirectory/SubSubDirectory/Rlibrary")
+
+# set working directory
+#remove to run# setwd("D:/TopDirectoryName/SecondTier/ThirdTier/WorkingDirectoryName")
+
+```
+
+# Week 1 - Introduction to R and RStudio
+
+```{r Section 2 - What is R and R Studio}
+#This comment line won't be run. The code below will add two numbers.
+4+2
+
+```
+
+```{r Section 3 - R Basics}
+# An elaborate calculator
+1 + 1
+2 * 9
+16 - 9
+8 / 4
+
+# Assignment
+a <- 2
+a
+a + 3
+a * 5
+
+b <- "string thing"
+b
+
+c <- data.frame(Letters = c("A", "B", "C"), Numbers = c(10, 20, 30))
+c
+
+a <- 5
+a
+a <- -10
+a
+
+# Activity for assignemnt 
+a <- 10
+b <- 15
+c <- -2
+(3 * a + b) / b + c
+###
+
+
+# Logic
+3 < 7
+3 > 7
+3 == 3
+3 == 7
+"word" == "word"
+"word" == "WORD"
+TRUE | FALSE
+TRUE & FALSE 
+
+3 < 4 & 5 > 1
+2 > 6 & 5 > 1
+5 == 5 | 4 < 8
+5 > 8 | 3 < 1
+
+5 == 5 | 4 < 8 & 5 > 8 | 3 < 1
+(5 == 5 | 4 < 8) & (5 > 8 | 3 < 1)
+(5 == 5 | 4 < 8) & (!(5 > 8) | !(3 < 1))
+
+3 <= 10
+-8 > 2
+"hi" == "Hi"
+6 < 4 & 10 > 5
+6 < 4 | 10 > 5 & 7 == 7
+
+```
+
+```{r Section 4 - Data types and objects}
+"my text"
+"k"
+"dog"
+"This is a long example of a character string that runs on for ages!"
+
+myvector <- c(10, 15, 7)
+mymatrix <- matrix(c(10, 15, 7, 9, 2, 12), ncol = 2, byrow = FALSE)
+myarray <- array(c(c(10, 15, 7, 9, 2, 12, 1, 6, 3),c(10, 15, 7, 9, 2, 12, 1, 6, 3)), dim = c(3, 3, 2))
+mylist <- list("male", 87, TRUE)
+mydataframe <- data.frame(sex = c("male", "female", "female"), age = c(28, 45, 37))
+myfactor <- factor(c("male", "female", "female"))
+
+myvector 
+mymatrix
+myarray
+mylist 
+mydataframe 
+myfactor 
+```
+
+```{r Section 5 - Functions}
+round(x = 27.128654, digits = 2)
+
+round(27.128654)
+
+c(1, 4, 6, 90)
+
+vec <- c(1, 4, 6, 90)
+print(vec)                #example 1
+
+(vec <- c(1, 4, 6, 90))   #example 2
+
+vec                       #example 3
+
+sqrt(49)
+num <- 49
+sqrt(num)
+
+numbers <- seq(from = 1, to = 15, by = 1)
+numbers
+
+max(numbers)
+min(numbers)
+mean(numbers)
+
+(seq_x <- 1:10)
+(seq_y <- c(seq(2, 10, 2), seq(10, 2, -2)))
+plot(x = seq_x, y = seq_y)
+```
+
+```{r Section 6 - Getting Help}
+
+help.start()
+
+?mean
+
+help("lm")
+
+??sequence
+help.search("append")
+RSiteSearch("correlation")
+
+```
+
+```{r Section 7 - Packages and Libraries}
+#remove to run # install.packages("package name")
+
+
+.libPaths()
+
+#remove to run # .libPaths("C:\\TopDirectory\\SubDirectory\\SubSubDirectory\\Rlibrary")
+
+#remove to run # help(package = "packagename")
+
+library(dplyr)
+```
+
+```{r Section 8 - Working Directory}
+
+getwd()
+
+# remove to run # setwd("L:/TopDirectory/NextDirectory/MidDirectory/WorkingDirectory")
+setwd("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets")
+```
+
+```{r Seciton 9 - Reading in Data}
+# remove to run # read.table("file.txt", header = TRUE, sep = "\t")
+
+# remove to run # read.csv("file.csv", header = TRUE)
+
+# remove to run # library(xlsx)
+# remove to run # read.xlsx("file.xlsx", header = TRUE, sheetIndex = 1)
+setwd("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets")
+
+read.csv("Wk1_9_10_Wk3_16_PulseDataTxt.csv", header = TRUE)
+
+# remove to run # pulse_data <- read.xlsx("Wk1_9and10PulseDataTxt.xlsx", sheetIndex = 3)
+pulse_data <- read.csv("Wk1_9_10_Wk3_16_PulseDataTxt.csv")
+
+
+# options for reading/writing xlsx files
+
+# package - xlsx - can read and write         depends on JAVA
+# package - readxl - can read                 can't write
+# package - openxlsx - can read and write
+# package - XLConnect                         depends on JAVA
+
+```
+
+```{r Section 10 - Know your data}
+head(pulse_data)
+tail(pulse_data, n=4)
+View(pulse_data)
+
+str(pulse_data)
+
+# referring to variables or observations
+pulse_data$Age
+mean(pulse_data$Age)
+pulse_data$Age[5]
+pulse_data$Age[4:8]
+pulse_data$Age[c(4:8,14:21)]
+
+pulse_data$Age[pulse_data$Smokes=="yes"]
+
+
+pulse_data[1:3,1:4]
+pulse_data[c(1,5),]
+
+pulse_data[pulse_data$Exercise=="high",c("StudentID","Pulse1","Pulse2")]
+
+
+length(pulse_data$StudentID)
+
+# missing data
+
+is.na(pulse_data$Pulse1)
+
+any(is.na(pulse_data$Pulse1))
+
+pulse_data$StudentID[is.na(pulse_data$Pulse1)]
+
+# data infromaiton
+#The length of a vector 
+length(pulse_data$StudentID)
+#Dimension of a dataset
+dim(pulse_data)
+#Column names of a dataset
+colnames(pulse_data) 
+
+#library(dplyr)
+
+# Subset
+# Can either use the subset function
+pulse_data_subset <- subset(x = pulse_data, subset = pulse_data$Gender == "male", select = -Year)
+# Or the square bracket method
+pulse_data_subset <- pulse_data[pulse_data$Gender == "male", 1:11]
+# dlpyr
+pulse_data_subset <- filter(pulse_data, Gender == "male")
+pulse_data_subset <- select(pulse_data_subset, -Year)
+
+
+# basic summaries and plots
+summary(pulse_data)
+table(pulse_data$Exercise)
+table_Exercise <- table(pulse_data$Exercise)
+prop.table(table_Exercise)
+sd(pulse_data$Height)
+var(pulse_data$Height)
+
+
+# plots
+# bar
+counts <- table(pulse_data$Exercise)
+barplot(height = counts)
+barplot(height = counts, main = "My First Bar graph", xlab = "Exercise Group", names.arg = c("1 High", "3 Low", "2 Moderate"), ylab = "Frequency")
+barplot(height = counts, main = "My Second Bar graph", xlab = "Frequency", names.arg = c("1 High", "3 Low", "2 Moderate"), ylab = "Exercise Group", horiz = TRUE)
+counts2 <- table(pulse_data$Gender,pulse_data$Exercise)
+           
+barplot(height = counts2, main = "My Third Bar graph", xlab = "Exercise Group", names.arg = c("1 High", "3 Low", "2 Moderate"), ylab = "Frequency", col = c("blue","red"), legend = rownames(counts2), args.legend = c(x="topleft"))
+
+# hist
+hist(x = pulse_data$Weight)
+# or just use
+hist(pulse_data$Weight)
+hist(x = pulse_data$Weight, breaks = c(20,40,60,80,100,120), main = "My First Histogram", ylim = c(0,60), xlab = "Weight (kg)", labels = TRUE)
+hist(x = pulse_data$Weight, breaks = seq(20,120,5), density = 15, border  = "blue", main = "My Second Histogram", ylim = c(0,30), xlab = "Weight (kg)")
+mythirdhist <- hist(x = pulse_data$Weight, main = "My Third Histogram", xlab = "Weight (kg)")
+print(mythirdhist)
+
+# box
+boxplot(pulse_data$Height)
+boxplot(formula = Height ~ Gender, data = pulse_data)
+boxplot(formula = Height ~ Gender, data = pulse_data, range = 0, main = "My First Boxplot", xlab = "Gender", ylab = "Height")
+boxplot(formula = Height ~ Gender, data = pulse_data, subset = Height>100, varwidth = TRUE, horizontal = TRUE, main = "My Second Boxplot", xlab = "Height", ylab = "Gender")
+mythirdboxplot <- boxplot(formula = Height ~ Gender, data = pulse_data, main = "My Third Boxplot", xlab = "Gender", ylab = "Height")
+print(mythirdboxplot)
+
+# scatter
+plot(pulse_data$Pulse1, pulse_data$Pulse2)
+# or
+plot(pulse_data$Pulse2 ~ pulse_data$Pulse1)
+plot(pulse_data$Pulse2 ~ pulse_data$Pulse1, main = "My First Scatterplot", sub = "Plotting is fun", xlab = "Pre-Exercise Pulse", ylab = "Post-Exercise Pulse")
+plot(pulse_data$Pulse2 ~ pulse_data$Pulse1, main = "My Second Scatterplot", xlab = "Pre-Exercise Pulse", ylab = "Post-Exercise Pulse",par( bg = "lightgrey"), cex = 1.1, cex.main = 2, col = "red", col.lab = "purple", font = 4, pch = 6)
+
+
+```
+
+# Week 2 - Data preparation and handling
+
+```{r Section 11 - Data prep and basic analysis}
+setwd("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets")
+mydata <- read.csv("Wk2_11Datacleaning.csv")
+
+head(mydata)
+
+tail(mydata)
+
+str(mydata)
+
+summary(mydata)
+
+summary(mydata$gender)
+
+table(mydata$Procedure)
+
+hist(mydata$no_prior_heart_conds)
+
+boxplot(mydata$no_prior_heart_conds)
+
+mydata$Patient[mydata$no_prior_heart_conds > 8]
+mydata$Patient[mydata$no_prior_heart_conds == 10]
+
+
+# Fixing errors
+#library(stringr)
+
+# correcting whitespace in gender
+mydata$gender
+str_trim(mydata$gender)
+mydata$gender <- str_trim(mydata$gender)
+
+# example of padding, not saving
+mydata$Patient
+str_pad(mydata$Patient, width = 2, side = "left", pad = 0)
+
+# changing to all uppercase
+mydata$kidney_disease
+toupper(mydata$kidney_disease)
+mydata$kidney_disease <- toupper(mydata$kidney_disease)
+
+# changing to all lowercase
+mydata$gender
+tolower(mydata$gender)
+mydata$gender <- tolower(mydata$gender)
+
+# correcting typo
+mydata$gender
+mydata$gender[mydata$gender == "fm"] <- "f"
+mydata$gender
+
+mydata$age
+mydata$age[mydata$age == 524 & mydata$Patient == 1] <- 79
+mydata$age
+
+# Type conversion
+mydata$Patient
+mydata$Patient <- as.factor(x = mydata$Patient)
+mydata$Patient
+
+mydata$Procedure
+mydata$Procedure <- factor(mydata$Procedure, levels = c(1, 2), labels = c("angioplasty", "bypass"))
+mydata$Procedure
+
+mydata$age <- as.numeric(as.character(mydata$age))
+
+mydata$age[mydata$age == 999] <- NA
+
+mydata$age_cat[mydata$age < 70] <- "<70"
+mydata$age_cat[mydata$age >= 70] <- "70+"
+mydata$age_cat
+
+mydata$age_cut <- cut(mydata$age, breaks = c(0, 60, 70, 100), right = F)
+
+
+
+
+# dates
+#library(lubridate)
+mydates <- c("19 Mar 18", "22/09/2019", "Diagnosis was 23rd March in 2011")
+dmy(mydates)
+
+mydates2 <- c("19/03/2018", "22/09/2019", "02/19/2018")
+mydates2_posix <- as.POSIXct(mydates2, format = "%d/%m/%Y")
+mydates2_posix
+
+format(mydates2_posix, format = "Born %d %b in the year %Y")
+
+
+```
+
+```{r Section 13 - Merging}
+df1 <- data.frame(Character = c("A", "B", "C"), Number = c(1, 2, 3), Logic = c(TRUE, FALSE, TRUE))
+df2 <- data.frame(Character = c("D", "E", "F"), Number = c(4, 5, 6), Logic = c(FALSE, FALSE, TRUE))
+df3 <- df2
+colnames(df3) <- c("Letter", "Numeric", "T/F")
+df4 <- data.frame(Character = c("A", "B", "C"), Date = c("1857-03-27", "1890-02-17", "1820-05-12"), Celebrity = c("K. Pearson", "R. Fisher", "F. Nightingale"))
+df5 <- data.frame(Character = rep(c("A", "B", "C"), 3), Number = c(rep(1, 3), rep(2, 3), rep(3, 3)), Logic = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, FALSE))
+df6 <- data.frame(Number = rep(c(1:3), 3), Character = c(rep("A", 3), rep("B", 3), rep("C", 3)), Message = c("I used the rep()", "To know more, check", "I unnecessarily over used it", " function to make df5 and df6.", "the documentation.", "for the sake of an example.", "It replicates things.", "Correction:", "Oh well"))
+df7 <- data.frame(Character = c("D", "E", "F"), Date = c("1623-06-19", "1890-02-17", "1900-01-13"), Celebrity = c("B. Pascal", "T. Bayes", "G. M. Cox"))
+df8 <- data.frame(Character = c("A", "B", "C"), Number = c(1.1, 2.1, 3.1), Location = c("This is", "my newest", "dataset"))
+# or
+# source("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2020 Intro to R workshops/datasets/CodeMergingData.R")
+
+
+# Vertical
+
+print(df1)
+print(df2)
+rbind(df1, df2)
+rbind(df1[, c(3, 1, 2)], df2)
+
+rbind(df1[, c(1, 3, 2)], df2, df1)
+
+# Horizontal
+
+print(df1)
+print(df4)
+cbind(df1, df4)
+
+merge(df1, df4, by = "Character")
+
+merge(df1, df4, by = 1)
+
+print(df5)
+print(df6)
+merge(df5, df6, by = c("Character", "Number"))
+merge(df5, df6, by = c("Number", "Character"))
+
+print(df3)
+print(df7)
+merge(df3, df7, by.x = "Letter", by.y = "Character")
+
+print(df1)
+print(df4[1:2, ])
+merge(df1, df4[1:2, ], by = "Character")
+
+merge(df1, df4[1:2, ], by = "Character", all = TRUE)
+
+print(df1)
+print(df8)
+merge(df1, df8, by = "Character")
+
+merge(df1, df3, by = NULL)
+
+merge(df1, df2, all = TRUE)
+
+
+rbind(df4, df7)				#answer 1
+cbind(df2, df7)				#answer 2
+merge(rbind(df4, df7), df1, all = TRUE)	#answer 3
+merge(df4, df2,  by = NULL)			#answer 4
+
+
+```
+
+```{r - Pivoting}
+# need a dataset
+#library(tidyr)
+#library(xlsx)
+
+# long to wide
+data_ltw <- read.xlsx("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_14_Pivot_Data.xlsx", sheetName = "Cake_May")
+data_ltw <- read_excel("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_14_Pivot_Data.xlsx", sheet = "Cake_May")
+head(data_ltw)
+print(data_ltw)
+
+data_ltw <- fill(data_ltw, c(Baker, Cake), .direction = "down")
+print(data_ltw)
+pivot_wider(data = data_ltw, names_from = Aspect, values_from = Score)
+
+
+# wide to long
+data_wtl <- read.xlsx("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_14_Pivot_Data.xlsx", sheetName = "Cake_2019")
+data_wtl <- read_excel("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_14_Pivot_Data.xlsx", sheet = "Cake_2019")
+head(data_wtl)
+print(data_wtl)
+
+pivot_longer(data = data_wtl, cols = January:December, names_to = "Month", values_to = "Score")
+
+
+
+### challenge
+data_challenge <- read.xlsx("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_14_Pivot_Data.xlsx", sheetName = "Cake_challenge")
+data_challenge <- read_excel("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_14_Pivot_Data.xlsx", sheet = "Cake_challenge")
+
+
+print(data_challenge)
+
+data_challenge <- fill(data_challenge, c(Baker, Cake), .direction = "down")
+
+
+pivot_wider(
+  pivot_longer(data_challenge, cols = Score_Amy:Score_Philip, names_to = "Scorer", values_to = "Score", values_drop_na = TRUE),
+  names_from = Aspect, values_from = Score
+)
+
+
+```
+
+
+```{r - Exporting}
+
+scdata <- read.csv("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_15_Wk4_18_SevereConditionData.csv", header = T)
+scdata          # data we are going to learn how to export
+
+#write.table(x = scdata, file = "SeverityDataMyFirstExportFileName.txt", sep = "\t", row.names = FALSE, col.names = TRUE)
+
+#write.table(x = scdata, file = "SeverityDataMy2ndExportFileName.txt", sep = "\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
+
+#write.csv(x = scdata, file = "SeverityDataMy3rdExportFileName.csv")
+
+#write.table(x = scdata, file = "SeverityDataMyFirstExportFileName.txt", sep = "\t", row.names = FALSE, col.names = FALSE, append = TRUE)
+getwd()
+#setwd() 
+
+pdf("example pdf output.pdf")
+plot(x = scdata$Month, y = scdata$Total)
+dev.off()
+
+
+jpeg("example jpeg output.jpeg", width = 10, height = 8, units = "in", res = 100)
+plot(x = scdata$Month, y = scdata$Total)
+dev.off()
+```
+
+```{r  - Saving R data}
+
+# save a single object 
+mydataframe
+saveRDS(mydataframe, "mydataframe.rds")
+readRDS(file = "mydataframe.rds")
+mydataframe_read_in <- readRDS("mydataframe.rds")
+
+# save mutliple objects
+save(mydataframe, mylist, myarray, file = "mythings.RData")
+load("mythings.RData")
+
+# save entire workspace
+#save.image is a shortcut for save entire workspace
+save.image(file = "all_my_work_space.RData")
+rm(list = ls())
+load("all_my_work_space.RData")
+
+```
+
+# Week 3 - Basic statistical analyses in R 
+
+```{r Section 16 - Basic Analyses}
+#library(xlsx)
+pulse_data<-read.csv("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk1_9_10_Wk3_16_PulseDataTxt.csv ",header=T)#, stringsasfactors=T)
+
+# Chi square
+
+chi_pulse_data <- chisq.test(pulse_data$Gender, pulse_data$Smokes, correct = FALSE)
+chi_pulse_data
+
+chi_pulse_data$observed
+
+chi_pulse_data$expected
+
+round(prop.table(table(pulse_data$Gender, pulse_data$Smokes), 2), 2)
+
+chi_pulse_data_yates <- chisq.test(pulse_data$Gender, pulse_data$Smokes)
+chi_pulse_data_yates
+
+# Fishers
+mocktable <- matrix(c(5, 2, 9, 7), nrow = 2, ncol = 2)
+colnames(mocktable) <- c("Low SBP", "High SBP")
+row.names(mocktable) <- c("Low salt intake", "High salt intake")
+mocktable
+
+chisq.test(mocktable)$expected
+
+fisher.test(mocktable)
+
+# McNemar's
+pulse_data$Pulse1_cat <- cut(pulse_data$Pulse1, breaks = c(0, 80, 150), right = F)
+pulse_data$Pulse2_cat <- cut(pulse_data$Pulse2, breaks = c(0, 80, 150), right = F)
+table(pulse_data$Pulse2_cat)
+table(pulse_data$Pulse1_cat)
+table(pulse_data$Pulse1_cat, pulse_data$Pulse2_cat)
+
+mcnemar.test(table(pulse_data$Pulse1_cat, pulse_data$Pulse2_cat), correct = FALSE)
+
+mcnemar.test(table(pulse_data$Pulse1_cat, pulse_data$Pulse2_cat))
+
+# independent t test
+
+#t.test(x = mydata$grp1DependentVar, y = mydata$grp2DependentVar)
+#t.test(x = mydata$DependentVar[group == 1 ], y = mydata$DependentVar[group == 2]
+#t.test(DependentVar~group, data = mydata)
+
+#quick and dirty check of data distribution
+hist(pulse_data$Pulse1[pulse_data$Assigned_group == "sat"])
+hist(pulse_data$Pulse1[pulse_data$Assigned_group == "ran"])
+
+#FORMULA NOTATION TO COMPARE GROUPS AND HOMOGENEITY OF VARIANCES = FALSE
+t.test(pulse_data$Pulse1~pulse_data$Assigned_group)
+
+#SUBSETTING TO COMPARE GROUPS AND HOMOGENEITY OF VARIANCES = TRUE
+t.test(pulse_data$Pulse1[pulse_data$Assigned_group == "sat"], pulse_data$Pulse1[pulse_data$Assigned_group == "ran"], var.equal = TRUE)
+
+t.test(pulse_data$Pulse1[pulse_data$Assigned_group == "sat"], pulse_data$Pulse1[pulse_data$Assigned_group == "ran" & pulse_data$Pulse1 < 130], var.equal = TRUE)
+
+# Mann Whitney / wilcoxen rank sum 
+wilcox.test(pulse_data$Pulse1[pulse_data$Assigned_group == "sat"], pulse_data$Pulse1[pulse_data$Assigned_group == "ran"], correct = FALSE)
+
+# paired t-test
+t.test(pulse_data$Pulse1, pulse_data$Pulse2, paired = TRUE)
+
+# Wilcoxen signed rank test
+wilcox.test(pulse_data$Pulse1, pulse_data$Pulse2, paired = TRUE, correct = FALSE)
+
+# ANOVA
+myanova <- aov(Pulse1 ~ Exercise, data = subset(pulse_data, Gender == "male"))
+summary(myanova)
+pairwise.t.test(pulse_data$Pulse1[pulse_data$Gender == "male"], pulse_data$Exercise[pulse_data$Gender == "male"], p.adj = "bonf")
+
+myanova_2 <- aov(Pulse1 ~ Exercise + Alcohol, data = subset(pulse_data, Gender == "male"))
+summary(myanova_2)
+myanova_2_rev <- aov(Pulse1 ~ Alcohol + Exercise, data = subset(pulse_data, Gender == "male"))
+summary(myanova_2_rev)
+
+library(car)
+myanova_typeII <- Anova(lm(Pulse1 ~ Exercise, data = subset(pulse_data, Gender == "male")))
+myanova_typeII
+myanova_typeIII <- Anova(lm(Pulse1 ~ Exercise, data = subset(pulse_data, Gender == "male")), type = "III")
+myanova_typeIII
+
+myanova_2_typeII <- Anova(lm(Pulse1 ~ Exercise + Alcohol, data = subset(pulse_data, Gender == "male")), type  = "II")
+myanova_2_typeII
+myanova_2_typeIII <- Anova(lm(Pulse1 ~ Exercise + Alcohol, data = subset(pulse_data, Gender == "male")), type = "III")
+myanova_2_typeIII
+
+
+# Kruskall-Wallis
+kruskal.test(Pulse1~Exercise, data = subset(pulse_data, Gender == "male"))
+pairwise.wilcox.test(pulse_data$Pulse1[pulse_data$Gender == "male"], pulse_data$Exercise[pulse_data$Gender == "male"], p.adj = "bonf")
+
+# Correlation
+plot(pulse_data$Weight, pulse_data$Height)
+plot(pulse_data$Weight[pulse_data$Height > 100], pulse_data$Height[pulse_data$Height > 100])
+
+cor(pulse_data$Height[pulse_data$Height > 100], pulse_data$Weight[pulse_data$Height > 100], method = "pearson")
+cor.test(pulse_data$Height[pulse_data$Height > 100], pulse_data$Weight[pulse_data$Height > 100], method = "pearson")
+
+# Linear model
+mylm <- lm(Weight ~ Height, data = pulse_data[pulse_data$Height > 100, ])
+summary(mylm)
+
+# linear model assumptions
+plot(mylm)
+
+#library(car)
+outlierTest(mylm)
+qqPlot(mylm)
+
+
+## logistic regression
+
+summary(pulse_data$Pulse2 - pulse_data$Pulse1)
+summary(pulse_data$Pulse2[pulse_data$Assigned_group == "ran"] - pulse_data$Pulse1[pulse_data$Assigned_group == "ran"])
+pulse_data$pulse_increase <-  cut(pulse_data$Pulse2 - pulse_data$Pulse1, breaks = c(-20, 50, 100), labels = c("50 or less", "more than 50"), right = TRUE)
+
+myglm <- glm(pulse_increase ~ Weight, data = pulse_data[pulse_data$Assigned_group == "ran",], family = "binomial")
+summary(myglm)
+exp(myglm$coefficients)
+exp(confint(myglm, level = 0.95))
+
+#ggplot(pulse_data[pulse_data$Assigned_group == "ran",], aes(y = Age, x = pulse_increase)) + geom_boxplot() + geom_jitter()
+
+# survival analysis 
+library(survival)
+library(survminer)
+# we will use the lung dataset from the survival package
+head(lung) 
+dim(lung)
+summary(lung)
+
+
+surv_1 <- survfit(Surv(time, status) ~ 1, data = lung)
+print(surv_1)
+
+summary(surv_1)$table
+
+summary(surv_1, times = c(1,2)*365)
+
+# seperately by sex
+surv_2 <- survfit(Surv(time, status) ~ sex, data = lung)
+print(surv_2)
+
+summary(surv_2)$table
+
+summary(surv_2, times = c(1,2)*365)
+
+# make some survival curves
+
+ggsurvplot(surv_2)
+
+ggsurvplot(surv_2,
+           pval = TRUE,
+           conf.int = TRUE,
+           surv.median.line = "v")
+
+
+ggsurvplot(surv_2,
+           pval = TRUE,
+           conf.int = TRUE,
+           surv.median.line = "v",
+           risk.table = TRUE,
+           risk.table.col = "strata",
+           linetype = "strata",
+           pallete = c("red","blue"))
+
+
+# log-rank test
+surv_diff_1 <- survdiff(Surv(time, status) ~ sex, data = lung)
+print(surv_diff_1)
+
+# to extract a more specific p value
+1 - pchisq(surv_diff_1$chisq, length(surv_diff_1$n) - 1)
+
+# new data  
+# head(veteran)
+# surv_3 <- survfit(Surv(time, status) ~ trt + celltype, data = veteran)
+# print(surv_3)
+
+#ggsurvplot(surv_3, fun ="event", conf.int = TRUE)$plot + 
+#  theme(legend.position = "right") + 
+#  facet_grid(celltype ~ trt)
+
+coxph(Surv(time, status) ~ sex, data = lung)
+
+summary(coxph(Surv(time, status) ~ sex, data = lung))
+
+
+```
+
+# Week 4 - Extended programming in R
+
+
+```{r Section 15 - Writing to a file}
+# scdata <- read.csv("W3_SevereConditionData_forimport.csv", header = T)
+# scdata          # data we are going to learn how to export
+# 
+# write.table(x = scdata, file = "SeverityDataMyFirstExportFileName.txt", sep = "\t", row.names = FALSE, col.names = TRUE)
+# 
+# write.table(x = scdata, file = "SeverityDataMy2ndExportFileName.txt", sep = "\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
+# 
+# write.csv(x = scdata, file = "SeverityDataMy3rdExportFileName.csv")
+# 
+# write.table(x = scdata, file = "SeverityDataMyFirstExportFileName.txt", sep = "\t", row.names = FALSE, col.names = FALSE, append = TRUE)
+```
+
+```{r Section 15 - Conditional statements}
+
+# if statements
+
+# if(logical statement){
+# # set of instructions...
+# # ,,,
+# }
+
+data <- c(1, 3, 4, 6, 1, 2)
+if(length(data) >= 4){
+  mean(data)
+}
+
+data <- c(1, 3, 4)
+if(length(data) >= 4){
+  mean(data)
+}
+
+data <- c(1, 3, 4, 6, 1, 2)
+if(length(data) >= 4){
+  mean(data)
+  var(data)
+  sum(data)
+  median(data)
+}
+
+if(length(data) >= 4){
+  print(mean(data))
+  print(var(data))
+  print(sum(data))
+  print(median(data))
+}
+
+if(length(data) >= 4 & !any(data == 999) & !any(data == 0)){
+  print(mean(data))
+  print(var(data))
+  print(sum(data))
+  print(median(data))
+}
+
+
+# if else statements
+
+# if(logical statement){
+#   # first set of instructions...
+#   # ,,,
+#   }else{
+#   # second set of instructions...
+#   # ,,,
+# }
+
+data <- c(1, 3, 4)
+if(length(data) >= 4){
+  mean(data)
+  }else{
+  print("not enough data")
+  print(data)
+}
+
+# else if statements
+
+if(length(data) >= 4){
+  mean(data)
+}else if(length(data) == 0){
+  print("You have no data dummy!")
+}else{
+  print("not enough data")
+  print(data)
+}
+
+```
+
+```{r Section 16 - Loops}
+scdata <- read.csv("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets/Wk2_15_Wk4_18_SevereConditionData.csv", header = T)
+# For loops
+
+for(i in seq(2, 10, 2)){
++ print(i^2)
+}
+
+scdata
+
+for(mon in scdata$Month){
+  sev <- scdata$Severe[scdata$Month == mon]
+  tot <- scdata$Total[scdata$Month == mon]
+  perc <- round(sev / tot * 100, 1)
+  print(paste("In the month of ", mon, " there were ", tot, " total cases of the condition, of which ", sev, " (", perc, "%) were severe.", sep = ""))
+}
+
+# While loops
+
+j <- 2
+while(j < 1000){
+  j <- j^2
+  print(j)
+}
+
+# Alternative loop methods - i.e. repetative processes
+
+# by 
+
+by(pulse_data, INDICES = pulse_data$Exercise, FUN = function(x){summary(x$Weight)})
+output <- by(pulse_data, INDICES = pulse_data$Exercise, FUN = function(x){mean(x$Weight)})
+output
+cbind(output)
+rbind(output)
+
+output2 <- by(pulse_data, INDICES = pulse_data$Exercise, FUN = function(x){range(x$Weight)})
+output2
+do.call(rbind,output2)
+
+# aggregate
+# does it to all provided variables
+aggregate(pulse_data, by = list(pulse_data$Exercise), FUN = mean, na.rm = TRUE)
+
+aggregate(pulse_data[,c("Height", "Weight", "Age", "Pulse1", "Pulse2")], by = list(pulse_data$Exercise), FUN = mean, na.rm = TRUE)
+aggregate(pulse_data[,c("Height", "Weight", "Age", "Pulse1", "Pulse2")], by = list(pulse_data$Exercise, pulse_data$Year), FUN = mean, na.rm = TRUE)
+
+
+# apply
+
+# works on arrays (matrices)
+# applies a function along a margin: 1 - over rows, 2 - over columns
+print(mymatrix)
+apply(mymatrix, 1, sum)
+apply(mymatrix, 2, sum)
+
+# lapply
+
+# works on every element of a list. this can include dataframes and vectors
+
+mylist2 <- list(c(1,2,3,2,1),c(4,5,6,7),c(8,9,10))
+print(mylist2)
+lapply(mylist2, sum)
+lapply(mylist2, length)
+
+# sapply
+
+# sapply is a 'wrapper' funciotn for lapply, it tries to simplify the output
+
+sapply(mylist2, sum)
+sapply(mylist2, length)
+
+# you can stop this with another argument
+sapply(mylist2, sum, simplify = FALSE)
+sapply(mylist2, length, simplify = FALSE)
+
+
+# mapply 
+
+# stands for 'multivariate apply'. it aims to vectorise arguments in fcuntions that aren't normally vectors.
+
+rep(1:4,4)
+
+
+# repeat of 1,2 ,3 and 4 eahc four times, combine results
+mapply(rep,x = 1:3, times = 3) # essentially the last 4 is vectorised to c(4,4,4,4)
+# equivalent to
+matrix(c(rep(1, 3), rep(2, 3), rep(3, 3)), 3,3)
+
+# could be change times, becomes list
+mapply(rep,x = 1:3, times = 1:3) # vector elements match
+rep(x = 1:3, times = 1:3)
+
+#eapply applies funciton to everything in environment
+
+eapply(env = .GlobalEnv, FUN = names)
+```
+
+```{r Section 17 - writing funcitons}
+
+my_function <- function(a, b){
+  a_sqrd <- a^2
+  b_sqrd <- b^2
+  c <- sqrt(a_sqrd + b_sqrd)
+  return(c)
+}
+my_function(a = 3, b = 4)
+my_function(a = 5, b = 12)
+
+a_sqrd
+
+my_function_2 <- function(a = 3, b = 4){
+  a_sqrd <- a^2
+  b_sqrd <- b^2
+  c <- sqrt(a_sqrd + b_sqrd)
+  return(c)
+}
+out1 <- my_function_2()
+out1
+out2 <- my_function_2(b = 12)
+out2
+
+my_function_3 <- function(a = 3, b = 4){
+  a_sqrd <- a^2
+  b_sqrd <- b^2
+  c <- sqrt(a_sqrd + b_sqrd)
+  # my_output <- c(a, b, c)
+  # return(my_output)
+  return(c(a, b, c))
+}
+my_function_3()
+```
+
+# Week 5 - Into the tidyverse: pipes and plots
+
+```{r Section - Tidyverse version}
+pulse_data <- read.csv("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R Workshops/datasets/Wk1_9_10_Wk3_16_PulseDataTxt.csv")
+
+# filter
+filter(.data = pulse_data, Height >= 190)
+# select
+#head(
+select(.data = pulse_data, StudentID, Age, Gender)
+#  )
+
+# mutate
+#head(
+mutate(.data = pulse_data, BMI = Weight / ( (Height / 100)^2))
+#  )
+
+head(
+mutate(.data = pulse_data, BMI = Weight / ( (Height / 100)^2), Weight_lb = Weight * 2.205)
+  )
+
+# transmutate 
+head(
+transmute(.data = pulse_data, BMI = Weight / ( (Height / 100)^2))
+  )
+
+# arrange
+head(
+arrange(.data = pulse_data, Age)
+)
+head(
+arrange(.data = pulse_data, Gender, Age)
+)
+head(
+arrange(.data = pulse_data, Gender, desc(Age))
+)
+
+# activity 
+new_pulse_data <- filter(pulse_data, Gender == "female") # filter for females
+new_pulse_data <- select(new_pulse_data, StudentID, Height, Weight, Age, Assigned_group) # select for these variables
+new_pulse_data <- mutate(new_pulse_data, Height_feet = Height / 30.48) # make a height variable in feet
+new_pulse_data <- arrange(new_pulse_data, Assigned_group, desc(Age))
+print(new_pulse_data)
+
+
+
+# pivoting
+# wide to long 
+pivot_longer(data = pulse_data, cols = c(Pulse1,Pulse2), names_to = "Pulse_Time", values_to = "Pulse")
+
+pulse_data_long <- pivot_longer(data = pulse_data, cols = c(Pulse1,Pulse2), names_to = "Pulse_Time", values_to = "Pulse")
+# long to wide
+pivot_wider(data = pulse_data_long, names_from = Pulse_Time, values_from = "Pulse")
+
+
+# unite
+head(
+  unite(data = pulse_data, col = "Gender_Year", Gender, Year, sep = "_")
+)
+
+pulse_data_2 <- unite(data = pulse_data, col = "Gender_Year", Gender, Year, sep = "_")
+# separate
+head(
+  separate(data = pulse_data_2, col = Gender_Year, into  = c("Gender", "Year"))
+)
+
+
+# summarise 
+summarise(.data = pulse_data, mean_age = mean(Age), max_pulse = max(Pulse1, Pulse2, na.rm = TRUE), Height_var = var(Height))
+
+pulse_data_grouped <- group_by(.data = pulse_data, Year)
+
+summarise(.data = pulse_data_grouped, mean_age = mean(Age), max_pulse = max(Pulse1, Pulse2, na.rm = TRUE), Height_var = var(Height))
+
+# summarise_all
+summarise_all(.tbl = pulse_data_grouped, .funs = mean, na.rm = TRUE)
+summarise_all(.tbl = select(pulse_data_grouped, Year, Height, Weight, Age), .funs = list(mean,median), na.rm = TRUE)
+# summarise_at
+summarise_at(.tbl = pulse_data_grouped, .vars = c("Height", "Weight", "Age"), .funs = mean, na.rm = TRUE)
+summarise_at(.tbl = pulse_data_grouped, .vars = c("Height", "Weight", "Age"), .funs = list(mean,median), na.rm = TRUE)
+# summairse_if
+summarise_if(.tbl = pulse_data_grouped, .predicate = is.numeric, .funs = list(mean, median), na.rm = TRUE)
+
+# activity
+pulse_data_grouped_2 <- group_by(pulse_data, Assigned_group)
+summarise_at(pulse_data_grouped_2, .vars = c("Height", "Weight", "Age", "Pulse1","Pulse2"), .funs = var, na.rm = TRUE) 
+```
+
+
+
+
+
+```{r Section - Pipes}
+
+# the useful part of tidyverse functions is that the output is often another dataset (not a data.frame, but a tibble. probably need to talk about this)
+
+pulse_data %>% summary()
+
+pulse_data %>% filter(Height >= 190)
+
+pulse_data %>% filter(Height >= 190) %>% select(StudentID, Height, Weight, Age, Gender) %>% arrange(Age)
+
+pulse_data %>% filter(Gender == "male") %>% lm(Weight ~ Height, data = .) %>% summary()
+
+pulse_data %$% table(Gender, Smokes)
+
+pulse_data %$% chisq.test(Gender, Smokes, correct = FALSE)
+pulse_data %$% chisq.test(Gender, Smokes, correct = FALSE) %$% print(expected)
+
+pulse_data %<>% arrange(-Year, Gender, Age)
+pulse_data %>% head()
+
+
+pulse_data %<>% filter(Gender == "male") %>% select(StudentID, Height, Weight, Age) %>% arrange(StudentID)
+pulse_data %>% head()
+
+
+#pulse_data %>% filter(Year == 96) %>% mutate(BMI = Weight / (Height/100)^2) %>% lm(BMI ~ Age, data = .) %>% summary()
+
+```
+
+```{r Section  ggplot}
+#library(ggplot2)
+setwd("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R workshops/datasets")
+#ggplot_data <- read.csv("ggplot_data.csv")
+ggplot_data <- read.csv("Wk5_Office_Bakers_ggplot_data.csv")
+
+head(ggplot_data)
+summary(ggplot_data)
+
+# basic spaghetti plot
+ggplot(data = ggplot_data, mapping = aes(x = Months, y = Weight_gain))
+
+ggplot(data = ggplot_data, mapping = aes(x = Months, y = Weight_gain)) + 
+  geom_point()
+  
+ggplot(data = ggplot_data, mapping = aes(x = Months, y = Weight_gain, group = paste(Worker,Period))) + 
+  geom_point() + 
+  geom_line()
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period)) + 
+  geom_point() + 
+  geom_line()
+
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_line()
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period, shape = Period, linetype = Period)) + 
+  geom_point() + 
+  geom_line()
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period, shape = Worker, linetype = Gender)) + 
+  geom_point() + 
+  geom_line()
+
+# # now lets just focus on one subjec
+# 
+# ggplot_data %>% filter(Worker == "X1") %>%
+#   ggplot(aes(x = Months, y = Weight_gain, group = Period)) + 
+#   geom_line() + 
+#   geom_point()
+
+# now let's consider labels
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  xlab("Months since baseline") + 
+  ylab("Weight gain since baseline") 
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  labs(x = "Months since baseline", y = "Weight gain since baseline", title = "Weight gain from eating so much cake", subtitle = "Effect of my hypothetical group exercise classes", colour = "Period: Pre/Post Group Exercise") 
+
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  scale_x_continuous(name = "Months since baseline", breaks = seq(0,9,3), labels = paste("Day", seq(0,9,3))) + 
+  scale_y_continuous(name = "Weight gain since baseline", breaks = seq(0,4,2)) + 
+  scale_colour_manual(name = "Period: Pre/Post", breaks = c("Pre Exercise","With Exercise"), labels = c("Pre Group Exercise","With Group Exercise"), values = c("purple","blue"))
+  
+# faceting
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  labs(x = "Months since baseline", y = "Weight gain since baseline", title = "My Hypothetical Experiment", subtitle = "Data that I made up", colour = "Period: Pre/Post") +
+  facet_wrap(~ Worker)
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  labs(x = "Months since baseline", y = "Weight gain since baseline", title = "My Hypothetical Experiment", subtitle = "Data that I made up", colour = "Period: Pre/Post") +
+  facet_wrap(~ Worker, scales = "free", ncol = 2)
+
+
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  labs(x = "Months since baseline", y = "Weight gain since baseline", title = "My Hypothetical Experiment", subtitle = "Data that I made up", colour = "Period: Pre/Post") +
+  facet_grid(Worker ~ Period)
+
+
+
+
+
+
+```
+
+
+```{r ggplot other ggplot}
+
+# use data_wtl
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker == "Amy") %>%
+  ggplot(aes(y = Score)) + 
+  geom_boxplot()
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker == "Amy") %>%
+  ggplot(aes(y = Score)) + 
+  geom_boxplot() + 
+  scale_x_discrete(name = "Amy's score distribution")
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score)) + 
+  geom_boxplot() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  coord_flip()
+
+# rotate labels
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  coord_flip() + 
+  theme(axis.text.y = element_text(angle = 45))
+
+# move legend
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  coord_flip() + 
+  theme(legend.position = "bottom")
+  
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  coord_flip() + 
+  theme(legend.position = c(0.9,0.2))
+
+#data_wtl %>% 
+# histogram
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker == "Amy") %>%
+  ggplot(aes(x = Score)) + 
+  geom_histogram(binwidth = 1) + 
+  labs(title = "Amy's distribution of scores")
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+
+# barplot
+data_wtl %>% pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>% group_by(Month) %>% mutate(Win_score = max(Score)) %>% filter(Score == Win_score) %>% arrange(Month) %>%
+  ggplot(aes(x = Baker)) + 
+  geom_bar() + 
+  labs(x = "Office Worker/Baker", y = "Times ", title = "Times each worker has won the baking competition", subtitle = "Win or draw") + 
+  theme(axis.text.x = element_text(angle = 45))
+
+
+
+# themes
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  theme_classic()
+
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  theme_light()
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  theme_dark()
+
+
+```
+
+
+```{r modifications}
+ggplot_data %>% unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker_Period, colour = Period)) + 
+  geom_point() + 
+  geom_line() + 
+  scale_x_continuous(name = "Months since baseline", breaks = seq(0,9,3), labels = paste("Month", seq(0,9,3)), expand = c(0,0)) + 
+  scale_y_continuous(name = "Weight gain since baseline", breaks = seq(0,4,2), expand = c(0,0)) + 
+  scale_colour_manual(name = "Period: Pre/Post", breaks = c("Pre Exercise","With Exercise"), labels = c("Pre Group Exercise","With Group Exercise"), values = c("purple","blue"))
+
+
+```
+
+```{r colour palettes}
+#install.packages('RColorBrewer')
+library(RColorBrewer)
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score, colour = Baker)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score, fill = Baker)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+
+# use a default R colour pallete
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score, fill = Baker)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  scale_fill_manual(values = topo.colors(6))
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score, fill = Baker)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  scale_fill_brewer(palette = 'Pastel2')
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score, fill = Baker)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  scale_fill_brewer(palette = 'Set2')
+
+display.brewer.all()
+
+
+```
+
+```{r adding test}
+library(ggpubr)
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker %in% c("Dana","Erica","Philip")) %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot() +
+  theme_bw() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+  
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker %in% c("Dana","Erica","Philip")) %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot() +
+  theme_bw() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  stat_compare_means(show.legend = FALSE)
+
+baker_comparisons = list( c("Dana","Erica"), c("Erica","Philip"), c("Dana","Philip")) 
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker %in% c("Dana","Erica","Philip")) %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot() +
+  theme_bw() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  stat_compare_means(label.y = 25, show.legend = FALSE) + 
+  stat_compare_means(comparisons = baker_comparisons)
+
+
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  filter(Baker %in% c("Dana","Erica","Philip")) %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot() +
+  theme_bw() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score") + 
+  stat_compare_means(label.y = 25, show.legend = FALSE) + 
+  stat_compare_means(comparisons = baker_comparisons, label = "p.signif")
+
+```
+
+
+```{r save ggplot}
+plot1 <- data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(title = "A Years Worth of Cake Scores", subtitle = "Distribution of each baker's monthly overall score")
+
+ggsave("My ggplot.png", plot = plot1, device = "png", width = 6, height  = 4, units = "in", dpi = 300)
+
+```
+
+
+```{r quick plots}
+qplot(x = Months, y = Weight_gain, colour = Period, group = paste(Worker, Period), data = ggplot_data, geom = c("line")) + 
+  xlab("Months since baseline") + 
+  ylab("Weight gain since baseline")
+
+qplot(x = Months, y = Weight_gain, colour = Period, data = ggplot_data, geom = c("line","point"), facets = Worker  ~ Period) + 
+  xlab("Months since baseline") + 
+  ylab("Weight gain since baseline")
+
+data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  qplot(x = Baker, y = Score, colour = Baker, data = ., geom = c("boxplot","jitter"))
+
+
+```
+
+```{r arrange graphs}
+#library(gridExtra)
+
+plot2 <- data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA) +
+  geom_jitter() + 
+  labs(subtitle = "Distribution of each baker's monthly overall score") + 
+  coord_flip() + 
+  theme(legend.position = "none")
+
+plot3 <- data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Score)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~Baker) + 
+  labs(subtitle = "Distribution of each baker's monthly overall score")
+
+plot4 <- data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  mutate(Month = factor(Month, levels = month.name)) %>%
+  ggplot(aes(x = Month, y = Score, group = Baker, colour = Baker)) + 
+  geom_point() + 
+  geom_line() + 
+  labs(subtitle = "Trend of each baker's monthly overall score") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+grid.arrange(plot2,plot3, plot4, ncol = 2, top = "A Years Worth of Cake Scores")
+
+
+library(cowplot)
+
+plot_grid(plot2,plot3, plot4, ncol = 1, align = "v", axis = "lr")
+
+
+
+ggarrange(plot2, plot4, ncol = 1, align = "hv", common.legend = TRUE, legend = "bottom", labels = "auto") 
+
+```
+
+```{r extra plot}
+
+# barplot - times won
+ first <- data_wtl %>% pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>% group_by(Month) %>% mutate(Win_score = max(Score), Baker = as.factor(Baker)) %>% filter(Score == Win_score) %>% arrange(Month) %>%
+  ggplot(aes(x = Baker, fill = Baker)) + 
+  geom_bar() + 
+#  labs(x = "Office Worker/Baker", y = "Times ", title = "Times each worker has won the baking competition", subtitle = "Win or draw") +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45)) + 
+  scale_fill_brewer(limits = c("Amy","Bob","Carl","Dana","Erica","Philip"), breaks = c("Amy","Bob","Carl","Dana","Erica","Philip"), labels = c("Amy","Bob","Carl","Dana","Erica","Philip"), type = "qual", palette = 2) + 
+  scale_x_discrete(limits = c("Amy","Bob","Carl","Dana","Erica","Philip"), breaks = c("Amy","Bob","Carl","Dana","Erica","Philip"), labels = c("Amy","Bob","Carl","Dana","Erica","Philip")) + 
+  labs(subtitle = "Times Won/Tied", y = "Count")
+
+# score distibution 
+
+second <- data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  ggplot(aes(x = Baker, y = Score, colour = Baker)) + 
+  geom_boxplot(fill = NA, outlier.shape = NA) +
+  geom_jitter() + 
+  labs(subtitle = "Distribution of Monthly Score") + 
+  #coord_flip() + 
+  #theme(legend.position = "none") + 
+  theme_bw() + 
+  theme(axis.text.x = element_blank(), axis.title.x = element_blank()) + 
+  scale_colour_brewer(type = "qual", palette = 2) 
+
+
+# score over the year
+third <- data_wtl %>% 
+  pivot_longer(cols = January:December, names_to = "Month", values_to = "Score") %>%
+  mutate(Month = factor(substr(Month,1,3), levels = substr(month.name,1,3))) %>%
+  ggplot(aes(x = Month, y = Score, group = Baker, colour = Baker)) + 
+  geom_point() + 
+  geom_line() + 
+  labs(subtitle = "Trend of Monthly Score") + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.y = element_blank()) + 
+  scale_colour_brewer(type = "qual", palette = 2) 
+
+#install.packages('magick')
+library(magick)
+#fourth <- #ggplot() + 
+ # theme_void()
+
+img <- image_read("L:/Lab_Stats_Unit/2015_and_Onwards/StatisticsUnitOrganisational/Training/2021 Intro to R Workshops/Choc-Fudge-Cake-b2d1909.jpg")# %>%
+  #image_resize("570x380") %>%
+  #image_colorize(35, "white")
+
+
+fourth <- ggdraw() + draw_image(img) + draw_figure_label("https://www.olivemagazine.com/guides/best-ever/best-chocolate-cake-recipes/", position = "bottom.left", size = 5)
+
+ggarrange(second, third, first, ncol = 2, nrow = 2, align = "hv", common.legend = TRUE, legend = "bottom")
+
+ggarrange(second, third, first, fourth, ncol = 2, nrow = 2, align = "hv", common.legend = TRUE, legend = "bottom")
+
+```
+
+```{r another extra plot}
+
+p1 <- ggplot_data %>% #unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  filter(Period == "Pre Exercise")%>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker, shape = Worker)) + 
+  geom_point() + 
+  geom_line(colour = brewer.pal(n = 6, name = "Paired")[6]) + 
+  scale_x_continuous(name = "Months", breaks = seq(0,9,3), labels = paste("Month", seq(0,9,3)), expand = c(0.01,0.01)) + 
+  scale_y_continuous(name = "Weight Gain", breaks = seq(0,4,2), expand = c(0.01,0.01)) + 
+  theme_classic() +
+  guides(colour = FALSE) + 
+  labs(title = "Before the Exercise Program", subtitle = "Weight Gain Before the Exercie Program Starts")
+
+p2 <- ggplot_data %>% 
+  filter(Months == 10) %>%
+  ggplot(aes(x = Weight_gain, fill = Period)) + 
+  geom_histogram(binwidth = 0.3) + 
+  facet_wrap(~Period, scales = "free_x", ncol = 1) + 
+  theme_classic() + 
+  labs(x = "Weight Gain Over 10 Months") + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = brewer.pal(n = 6, name = "Paired")[c(6,2)])
+
+p3 <- ggplot_data %>% #unite("Worker_Period", Worker, Period, remove = FALSE) %>%
+  filter(Period == "With Exercise")%>%
+  ggplot(aes(x = Months, y = Weight_gain, group = Worker, shape = Worker)) + 
+  geom_point() + 
+  geom_line(colour = brewer.pal(n = 6, name = "Paired")[2]) + 
+  scale_x_continuous(name = "Months", breaks = seq(0,9,3), labels = paste("Month", seq(0,9,3)), expand = c(0.01,0.01)) + 
+  scale_y_continuous(name = "Weight Gain", breaks = seq(0,4,2), expand = c(0.01,0.01)) + 
+  theme_classic() +
+  labs(title = "With the Exercise Program", subtitle = "Weight Gain During the Exercie Program")
+
+col_plots <- ggarrange(p1,p3, ncol = 1, common.legend = TRUE, legend = "right")
+plot_grid(p2,col_plots)
+
+
+```
+
+
+```{r Section 18 - Troubleshooting}
+mydata <- read.csv("L:\\Wk2_11DataCleaning.csv", header = T)
+myData$age
+
+
+```
+
+```{r Section 19 - Usefull code snippets}
+
+# remove everything
+
+rm()
+
+rm(list = ls())
+
+# quit
+
+q()
+
+# %in%
+
+vec_a <- c("a", "b", "c", "d")
+vec_b <- c("a", "f", "e", "w", "g", "hj", "i", "t", "b", "d", "h", "z")
+vec_a %in% vec_b
+
+# Character string search and substitution - grepl() and gsub()
+
+vec_char <- c("my apple", "your apple", "my banana", "his banana", "her strawberry", "your mango", "my strawberry", "his guava", "my tangerine")
+grepl(pattern = "my", x = vec_char)
+
+vec_char[grepl(pattern = "my", x = vec_char)]
+
+grep(pattern = "my", x = vec_char)
+vec_char[grep(pattern = "my", x = vec_char)]
+
+gsub(pattern = "my", replacement = "Give me the", x = vec_char)
+
+gsub(pattern = "y", replacement = "Y", x = vec_char)
+
+sub(pattern = "y", replacement = "Y", x = vec_char)
+
+num <- c("150", "1'500", "12,500")
+num
+as.numeric(num)
+
+num
+num <- gsub(pattern = "'", replacement = "", x = num)
+num <- gsub(pattern = ",", replacement = "", x = num)
+num
+as.numeric(num)
+
+
+```
+
+
+
+
